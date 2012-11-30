@@ -2,7 +2,7 @@
 
 struct Parser {
   FILE * fd;
-}
+};
 
 struct Parser * parser_new(FILE * fd);
 void parser_destroy(struct Parser * parser);

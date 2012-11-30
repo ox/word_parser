@@ -6,7 +6,7 @@
 
 int main (int argc, char * argv[]) {
   FILE * fd;
-  struct Parser parser;
+  struct Parser * parser;
   char * word;
 
   if (argc != 2) {
@@ -18,8 +18,9 @@ int main (int argc, char * argv[]) {
   if (fd != NULL) {
     parser = parser_new(fd);
 
-    while ( word = parser_next_word(parser) ) {
+    while ( (word = parser_next_word(parser)) != NULL ) {
       printf("%s\n", word);
+      free(word);
     }
   }
 

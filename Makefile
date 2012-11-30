@@ -2,7 +2,7 @@ CC ?= gcc
 CFLAGS ?= -pedantic -Wall
 
 EXEC = word_parser
-SRCS = word_parser.c
+SRCS = parser.c word_parser.c
 OBJS = ${SRCS:.c=.o}
 
 all: ${EXEC}
@@ -13,8 +13,11 @@ all: ${EXEC}
 ${EXEC}: ${OBJS}
 	${CC} ${LDFLAGS} -o ${EXEC} ${OBJS}
 
+test: ${EXEC}
+	./${EXEC} test.txt
+
 clean:
-	rm ${EXEC}
+	rm ./${EXEC}
 	rm ./*.o
 
 .PHONEY: all clean
