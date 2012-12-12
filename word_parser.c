@@ -8,6 +8,7 @@ int main (int argc, char * argv[]) {
   FILE * fd;
   struct Parser * parser;
   char * word;
+  char * line;
 
   if (argc != 2) {
     fprintf(stderr, "usage: word_parser <file>\n");
@@ -22,6 +23,13 @@ int main (int argc, char * argv[]) {
       printf("%s\n", word);
       free(word);
     }
+  }
+
+  rewind(fd);
+
+  while ( (line = parser_next_line(parser)) != NULL && line[0] != 0 ) {
+    printf("line: [%s]\n", line);
+    free(line);
   }
 
   parser_destroy(parser);
