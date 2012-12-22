@@ -4,52 +4,34 @@
 
 #include "parser.h"
 
-struct Parser * parser_new(FILE * fd) {
+char * parser_next_word(FILE * fd) {
 	if (!fd)
-		return NULL;
-
-  struct Parser * tmp = malloc(sizeof(struct Parser));
-  tmp->fd = fd;
-
-  return tmp;
-}
-
-void parser_destroy(struct Parser * parser) {
-	if (!parser)
-		return;
-
-  fclose(parser->fd);
-  free(parser);
-}
-
-char * parser_next_word(struct Parser * parser) {
-	if (!parser)
 		return NULL;
 
   char c;
   char * word;
   int word_length = 0;
 
-  do { c = fgetc(parser->fd); } while ( c != EOF && !isalnum(c) );
-  fseek(parser->fd, -1, SEEK_CUR); /* rewind 1 char */
+  do { c = fgetc(fd); } while ( c != EOF && !isalnum(c) );
+  fseek(fd, -1, SEEK_CUR); /* rewind 1 char */
 
   do {
-    c = fgetc(parser->fd);
+    c = fgetc(fd);
     if ( !isalnum(c) ) { break; }
     word_length++;
   } while (c != EOF);
 
   if (word_length == 0) { return NULL; }
 
-  fseek(parser->fd, -(word_length + 1), SEEK_CUR);
+  fseek(fd, -(word_length + 1), SEEK_CUR);
   word = calloc(1,word_length + 1);
-  fread(word, sizeof(char), word_length, parser->fd);
+  fread(word, sizeof(char), word_length, fd);
 
   return word;
 }
 
-char * parser_next_line(struct Parser * parser) {
-	if (!parser)
+char * parser_next_line(FILE * fd) {
+	if (!fd)
 		return NULL;
 
   char c = ' ';
@@ -57,12 +39,12 @@ char * parser_next_line(struct Parser * parser) {
   int cur_max = 128;
   char * line = calloc(1,cur_max + 1);
 
-  while ( (c != '\n') && (!feof(parser->fd)) ) {
+  while ( (c != '\n') && (!feof(fd)) ) {
     if (count == cur_max) {
       cur_max *= 2;
       line = realloc(line, cur_max);
     }
-    c = fgetc(parser->fd);
+    c = fgetc(fd);
     line[count++] = c;
   }
 

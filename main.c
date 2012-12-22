@@ -6,7 +6,6 @@
 
 int main (int argc, char * argv[]) {
   FILE * fd;
-  struct Parser * parser;
   char * word, * line;
 
   if (argc != 2) {
@@ -16,10 +15,7 @@ int main (int argc, char * argv[]) {
 
   fd = fopen(argv[1], "r");
   if (fd != NULL) {
-    parser = parser_new(fd);
-
-
-    while ( (word = parser_next_word(parser)) != NULL ) {
+    while ( (word = parser_next_word(fd)) != NULL ) {
       printf("%s\n", word);
       free(word);
     }
@@ -28,12 +24,12 @@ int main (int argc, char * argv[]) {
 
 		/* read each line, point `line` at the memory malloc'd in parser_next_line.
 		   `line` may be an empty line*/
-  	while ( (line = parser_next_line(parser)) != NULL) {
+  	while ( (line = parser_next_line(fd)) != NULL) {
     	printf("line: [%s]\n", line);
     	free(line);
   	}
 
-  	parser_destroy(parser);
+		fclose(fd);
 	} else {
 		fprintf(stderr, "Unable to open %s\n", argv[1]);
 	}
