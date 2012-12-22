@@ -5,6 +5,9 @@
 #include "parser.h"
 
 struct Parser * parser_new(FILE * fd) {
+	if (!fd)
+		return NULL;
+
   struct Parser * tmp = malloc(sizeof(struct Parser));
   tmp->fd = fd;
 
@@ -12,11 +15,17 @@ struct Parser * parser_new(FILE * fd) {
 }
 
 void parser_destroy(struct Parser * parser) {
+	if (!parser)
+		return;
+
   fclose(parser->fd);
   free(parser);
 }
 
 char * parser_next_word(struct Parser * parser) {
+	if (!parser)
+		return NULL;
+
   char c;
   char * word;
   int word_length = 0;
@@ -40,6 +49,9 @@ char * parser_next_word(struct Parser * parser) {
 }
 
 char * parser_next_line(struct Parser * parser) {
+	if (!parser)
+		return NULL;
+
   char c = ' ';
   int count = 0;
   int cur_max = 128;
